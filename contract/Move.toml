@@ -1,0 +1,17 @@
+[package]
+name = "MuPay"
+version = "1.0.0"
+authors = []
+
+[addresses]
+exampleAddress = "0x84c62201ce888a47ee61e3f56f944903e9df46eaa0b75640c0c53645d08e02b2"
+self = "0x84c62201ce888a47ee61e3f56f944903e9df46eaa0b75640c0c53645d08e02b2"
+
+[dev-addresses]
+
+[dependencies.SupraFramework]
+git = "https://github.com/Entropy-Foundation/aptos-core.git"
+rev = "dev"
+subdir = "aptos-move/framework/supra-framework"
+
+[dev-dependencies]
