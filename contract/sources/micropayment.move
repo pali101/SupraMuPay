@@ -2,7 +2,7 @@ module self::micropayment{
     use std::signer;
     use std::vector;
     use std::hash;
-    use std::string::String;
+    use std::string::{Self, String};
     use supra_framework::supra_coin::SupraCoin;
     use supra_framework::coin::{Self, Coin};
     use aptos_std::table::{Self, Table};
@@ -56,7 +56,7 @@ module self::micropayment{
         });
     }
 
-    public entry fun create_channel (sender: &signer, receiver_address: address, initial_amount: u64,total_tokens:u64,  trust_anchor: String) acquires GlobalTable, SignerCapabilityStore {
+    public entry fun create_channel (sender: &signer, receiver_address: address, initial_amount: u64,total_tokens:u64,  trust_anchor: vector<u8>) acquires GlobalTable, SignerCapabilityStore {
        let sender_address = signer::address_of(sender);
         let global_table_resource = borrow_global_mut<GlobalTable>(MODULE_OWNER);
         let counter = global_table_resource.channel_counter + 1;
@@ -84,7 +84,7 @@ module self::micropayment{
         global_table_resource.channel_counter = counter;
     }
 
-    public entry fun redeem_channel (receiver: &signer,final_token: String, no_of_tokens: u64, channel_id: u64) acquires GlobalTable, SignerCapabilityStore {
+    public entry fun redeem_channel (receiver: &signer,final_token: vector<u8>, no_of_tokens: u64, channel_id: u64) acquires GlobalTable, SignerCapabilityStore {
 
         
         let global_table_resource = borrow_global_mut<GlobalTable>(MODULE_OWNER);
@@ -96,7 +96,7 @@ module self::micropayment{
         assert!(channel.receiver_address == receiver_address, E_NOT_RECEIVER);
         let total_tokens = channel.total_tokens;
         let initial_amount = channel.initial_amount;
-        let trust_anchor_vec = *std::string::bytes(&channel.trust_anchor);
+        let trust_anchor_vec = trust_anchor;
 
         let signer_cap_resource = borrow_global_mut<SignerCapabilityStore>(MODULE_OWNER);
         let (rsrc_acc_signer,  _rsrc_acc_address) = get_rsrc_acc(signer_cap_resource);
@@ -106,10 +106,11 @@ module self::micropayment{
 
 
         // let hash = calculate_hash(final_token, channel.trust_anchor, no_of_tokens, channel_id);
-        let input = *std::string::bytes(&final_token);
+        // let input = *std::string::bytes(&final_token);
+        let input = final_token;
         let hash_value = hash::sha3_256(input);
         let num = no_of_tokens;
-        while (num > 1) {
+        while (num > 0) {
             hash_value = hash::sha3_256(input);
             num = num - 1;
             input = hash_value;
