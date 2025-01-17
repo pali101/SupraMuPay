@@ -137,4 +137,10 @@ module self::micropayment{
 
         (rsrc_acc_signer, rsrc_acc_addr)
     }
+
+    #[view]
+    public fun get_last_channel_id():u64 acquires GlobalTable {
+        let global_table_resource = borrow_global_mut<GlobalTable>(MODULE_OWNER);
+        global_table_resource.channel_counter
+    }
 }
