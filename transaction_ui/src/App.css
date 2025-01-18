@@ -1,0 +1,81 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.input-section {
+  margin-bottom: 20px;
+}
+
+button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+button:disabled {
+  background-color: #888;
+  cursor: not-allowed;
+}
+
+.progress-section {
+  margin-top: 20px;
+  width: 80%;
+  max-width: 400px;
+}
+
+.progress-bar {
+  width: 100%;
+  background-color: #ccc;
+  height: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #4caf50;
+  transition: width 0.5s ease;
+}
+
+.animation-section {
+  position: relative;
+  margin-top: 40px;
+}
+
+.owl-image {
+  width: 100px;
+  position: absolute;
+  top: 50px;
+  left: 10%;
+  animation: idleOwl 2s infinite alternate;
+}
+
+.owl-flying {
+  animation: flyOwl 5s ease-in-out forwards;
+}
+
+.letterbox {
+  position: absolute;
+  bottom: 0;
+  right: 10%;
+  text-align: center;
+}
+
+.letter-image {
+  width: 10px;
+}
