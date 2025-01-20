@@ -7,12 +7,22 @@
     }
   }
   
-  @keyframes flyOwl {
+  /* @keyframes flyOwl {
     from {
       transform: translateX(0);
     }
     to {
-      transform: translateX(80vw);
+      transform: translateX(calc(100vw - 150px)); 
     }
-  }
+  } */
+
+  @keyframes arcFly {
+    0% {
+        transform: rotate(0deg) translateX(50vw) rotate(0deg);
+    }
+    100% {
+        transform: rotate(-180deg) translateX(50vw) rotate(180deg);
+    }
+}
+
   

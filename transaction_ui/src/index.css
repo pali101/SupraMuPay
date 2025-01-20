@@ -5,7 +5,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
+  padding: 0;
+  width: 100vw;
+  overflow-x: hidden; /* Ensure no horizontal scroll */}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

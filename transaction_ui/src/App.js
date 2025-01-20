@@ -35,7 +35,7 @@ function App() {
       <header className="App-header">
         <h1>🦉 Harry Potter Owl Delivery System</h1>
         <div className="input-section">
-          <label htmlFor="coin-input">Enter Coins to Send:</label>
+          <label htmlFor="coin-input">Enter number of tokens to Send:</label>
           <input
             id="coin-input"
             type="number"
@@ -49,7 +49,7 @@ function App() {
         </button>
         <div className="progress-section">
           <p>
-            {lettersReceived} / 10 letters received
+            {lettersReceived*10} % received
           </p>
           <div className="progress-bar">
             <div
