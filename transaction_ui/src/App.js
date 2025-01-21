@@ -31,54 +31,64 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="App-Body">
-        {/* Navbar Section */}
-      <nav className="navbar">
+<div className="App">
+  <header className="App-Body">
+    {/* Navbar Section */}
+    <nav className="navbar"></nav>
+    <h1>LUMAS TRANSACTION - Make it happen!</h1>
 
-      </nav>
-        <h1>LUMAS TRANSACTION - Make it happen!</h1>
-        <div className="input-section">
-          <label htmlFor="coin-input">Enter amount to Send:</label>
-          <input
-            id="coin-input"
-            type="number"
-            value={coins}
-            onChange={(e) => setCoins(Number(e.target.value))}
-            disabled={deliveryInProgress}
-          />
-          <button onClick={handleSendCoins} disabled={deliveryInProgress || coins <= 0}>
-            {deliveryInProgress ? 'Delivery in Progress...' : 'Send'}
-          </button>
+    <div className="input-section">
+  {/* Row: Label and Input */}
+  <div className="input-section-w">
+    <label htmlFor="coin-input">Enter amount to Send:</label>
+    <input
+      id="coin-input"
+      type="number"
+      value={coins}
+      onChange={(e) => setCoins(Number(e.target.value))}
+      disabled={deliveryInProgress}
+    />
+  </div>
+
+  {/* Row: Send Button */}
+  <button
+    className="send-button"
+    onClick={handleSendCoins}
+    disabled={deliveryInProgress || coins <= 0}
+  >
+    {deliveryInProgress ? 'Delivery in Progress...' : 'Send'}
+  </button>
+</div>
+
+
+    {/* Progress Section */}
+    {deliveryInProgress && (
+      <div className={`progress-section ${deliveryInProgress ? 'visible' : ''}`}>
+        <p>{lettersReceived * 10}% received</p>
+        <div className="progress-bar">
+          <div
+            className="progress-bar-fill"
+            style={{ width: `${(lettersReceived / 10) * 100}%` }}
+          ></div>
         </div>
+      </div>
+    )}
 
-        {/* Progress Section */}
-        {deliveryInProgress && (
-          <div className={`progress-section ${deliveryInProgress ? 'visible' : ''}`}>
-            <p>{lettersReceived * 10}% received</p>
-            <div className="progress-bar">
-              <div
-                className="progress-bar-fill"
-                style={{ width: `${(lettersReceived / 10) * 100}%` }}
-              ></div>
-            </div>
-          </div>
-        )}
-
-        {/* Owl Animation Section */}
-        <div className="animation-section">
-          <img
-            src={owlImage}
-            alt="Owl"
-            className={`owl-image ${deliveryInProgress ? 'owl-flying' : ''}`}
-          />
-          <div className="letterbox">
-            <img src={letterImage} alt="Letter" className="letter-image" />
-            <p>Dumbledore's Letterbox</p>
-          </div>
-        </div>
-      </header>
+    {/* Animation Section */}
+    <div className="animation-section">
+      <img
+        src={owlImage}
+        alt="Owl"
+        className={`owl-image ${deliveryInProgress ? 'owl-flying' : ''}`}
+      />
+      <div className="letterbox">
+        <img src={letterImage} alt="Letter" className="letter-image" />
+        <p>Dumbledore's Letterbox</p>
+      </div>
     </div>
+  </header>
+</div>
+
   );
 }
 

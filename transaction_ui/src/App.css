@@ -2,9 +2,10 @@
   text-align: center;
   top: 20%;
 }
+
 .navbar {
   width: 100%;
-  background-color: #b9c426;
+  background-color: #23434a;
   padding: 20px 0;
   position: fixed;
   top: 0;
@@ -12,47 +13,94 @@
 }
 
 .App-Body {
-  background-color: #323428;
+  background-color: #14272b;
   min-height: 100vh;
-  padding: 40px;
+  padding: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* justify-content: center; */
-  color: rgb(213, 221, 196);
+  color: rgb(180, 232, 226);
 }
 
-.Input {
-  margin-top: 70px;
+h1 {
+  color: whitesmoke;
+  margin-top: 60px;
+  margin-bottom: 150px
+}
+
+.input-label {
+  font-size: 18px;
+  color: rgb(180, 232, 226);
+}
+
+.input-field {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 150px; /* Adjust width as needed */
+  background-color: #23434a;
+  color: white;
 }
 
 .input-section {
+  display: flex;
+  flex-direction: column; /* Stack the label+input and button vertically */
+  align-items: center; /* Center-align the entire section */
+  gap: 15px; /* Space between the input row and the button */
   margin-bottom: 20px;
 }
 
-button {
+.input-section-w {
+  display: flex;
+  flex-direction: row; /* Place label and input in one line */
+  justify-content: center; /* Center align within the section */
+  align-items: center; /* Align vertically in the row */
+  gap: 10px; /* Space between label and input field */
+}
+
+.input-section-w label {
+  font-size: 18px;
+  color: rgb(180, 232, 226);
+}
+
+.input-section-w input {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  width: 150px; /* Standard width for input */
+  background-color: #23434a;
+  color: white;
+}
+
+.send-button {
+  margin-top: 30px;
+  padding: 10px 20px;
+  font-size: 16px;
   background-color: #4caf50;
   color: white;
   border: none;
-  padding: 10px 20px;
-  margin-top: 10px;
-  cursor: pointer;
-  font-size: 16px;
   border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-button:disabled {
+.send-button:hover {
+  background-color: #367c39;
+}
+
+.send-button:disabled {
   background-color: #a7f4b7;
   cursor: not-allowed;
 }
 
-.progress-section {
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-}
 
-.progress-section.visible {
-  opacity: 1;
+.progress-section {
+  width: 80%;
+  margin: 20px auto;
+  text-align: center;
 }
 
 .progress-bar {
@@ -61,6 +109,7 @@ button:disabled {
   height: 20px;
   border-radius: 10px;
   overflow: hidden;
+  margin-top: 10px;
 }
 
 .progress-bar-fill {
@@ -70,42 +119,24 @@ button:disabled {
 }
 
 .animation-section {
-  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 40px;
+  width: 80%;
 }
 
 .owl-image {
   width: 100px;
-  position: absolute;
-  top: 100px;
-  left: 50%;
+  position: relative;
   animation: idleOwl 2s infinite alternate;
 }
 
-.owl-flying {
-  /* animation: flyOwl 5s ease-in-out forwards; */
-  position: relative;
-  top: 50%;
-  left: 50%;
-  width: 80px;
-  transform-origin: center center;
-  animation: arcFly 3s linear forwards;
-}
-
 .letterbox {
-  position: absolute;
-  bottom: 10%;
-  right: 10%;
-  display: flex;
-  flex-direction: column; /* Stack text and image */
-  align-items: center;
   text-align: center;
 }
 
-
 .letter-image {
-  position: fixed;
   width: 80px;
-  bottom: 20%;
-  right: 50%;
+  margin-bottom: 10px;
 }
