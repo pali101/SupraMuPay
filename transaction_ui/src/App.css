@@ -2,15 +2,28 @@
   text-align: center;
   top: 20%;
 }
+.navbar {
+  width: 100%;
+  background-color: #b9c426;
+  padding: 20px 0;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+}
 
-.App-header {
-  background-color: #282c34;
+.App-Body {
+  background-color: #323428;
   min-height: 100vh;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  color: white;
+  /* justify-content: center; */
+  color: rgb(213, 221, 196);
+}
+
+.Input {
+  margin-top: 70px;
 }
 
 .input-section {
@@ -29,14 +42,17 @@ button {
 }
 
 button:disabled {
-  background-color: #888;
+  background-color: #a7f4b7;
   cursor: not-allowed;
 }
 
 .progress-section {
-  margin-top: 20px;
-  width: 80%;
-  max-width: 400px;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.progress-section.visible {
+  opacity: 1;
 }
 
 .progress-bar {
@@ -78,10 +94,14 @@ button:disabled {
 
 .letterbox {
   position: absolute;
-  bottom: 0;
+  bottom: 10%;
   right: 10%;
+  display: flex;
+  flex-direction: column; /* Stack text and image */
+  align-items: center;
   text-align: center;
 }
+
 
 .letter-image {
   position: fixed;
