@@ -32,10 +32,14 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>🦉 Harry Potter Owl Delivery System</h1>
+      <header className="App-Body">
+        {/* Navbar Section */}
+      <nav className="navbar">
+
+      </nav>
+        <h1>LUMAS TRANSACTION - Make it happen!</h1>
         <div className="input-section">
-          <label htmlFor="coin-input">Enter number of tokens to Send:</label>
+          <label htmlFor="coin-input">Enter amount to Send:</label>
           <input
             id="coin-input"
             type="number"
@@ -43,21 +47,23 @@ function App() {
             onChange={(e) => setCoins(Number(e.target.value))}
             disabled={deliveryInProgress}
           />
+          <button onClick={handleSendCoins} disabled={deliveryInProgress || coins <= 0}>
+            {deliveryInProgress ? 'Delivery in Progress...' : 'Send'}
+          </button>
         </div>
-        <button onClick={handleSendCoins} disabled={deliveryInProgress || coins <= 0}>
-          {deliveryInProgress ? 'Delivery in Progress...' : 'Send Coins'}
-        </button>
-        <div className="progress-section">
-          <p>
-            {lettersReceived*10} % received
-          </p>
-          <div className="progress-bar">
-            <div
-              className="progress-bar-fill"
-              style={{ width: `${(lettersReceived / 10) * 100}%` }}
-            ></div>
+
+        {/* Progress Section */}
+        {deliveryInProgress && (
+          <div className={`progress-section ${deliveryInProgress ? 'visible' : ''}`}>
+            <p>{lettersReceived * 10}% received</p>
+            <div className="progress-bar">
+              <div
+                className="progress-bar-fill"
+                style={{ width: `${(lettersReceived / 10) * 100}%` }}
+              ></div>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Owl Animation Section */}
         <div className="animation-section">
