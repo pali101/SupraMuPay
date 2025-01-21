@@ -1,28 +1,29 @@
 @keyframes idleOwl {
-    0% {
-      transform: translateY(0);
-    }
-    100% {
-      transform: translateY(-10px);
-    }
+  0% {
+    transform: translateY(0);
   }
-  
-  /* @keyframes flyOwl {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(calc(100vw - 150px)); 
-    }
-  } */
-
-  @keyframes arcFly {
-    0% {
-        transform: rotate(0deg) translateX(50vw) rotate(0deg);
-    }
-    100% {
-        transform: rotate(-180deg) translateX(50vw) rotate(180deg);
-    }
+  100% {
+    transform: translateY(-10px);
+  }
 }
+
+@keyframes arcFly {
+  0% {
+      transform: translate(0, 0);
+  }
+  25% {
+      transform: translate(20vw, -50px);  /* Move right and slightly up */
+  }
+  50% {
+      transform: translate(40vw, -100px); /* Peak of the arc */
+  }
+  75% {
+      transform: translate(60vw, -50px);  /* Start descending */
+  }
+  100% {
+      transform: translate(80vw, 0); /* Land before reaching the edge */
+  }
+}
+
 
   
