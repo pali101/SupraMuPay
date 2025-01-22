@@ -15,7 +15,7 @@ function App() {
     setDeliveryInProgress(true);
     setLettersReceived(0);
 
-    const totalParts = 5;
+    const totalParts = 10;
     const delay = 500; // Delay between each delivery in ms
     let currentPart = 0;
 
@@ -64,11 +64,11 @@ function App() {
     {/* Progress Section */}
     {deliveryInProgress && (
       <div className={`progress-section ${deliveryInProgress ? 'visible' : ''}`}>
-        <p>{lettersReceived * 5}% received</p>
+        <p>{lettersReceived * 10}% received</p>
         <div className="progress-bar">
           <div
             className="progress-bar-fill"
-            style={{ width: `${(lettersReceived / 5) * 100}%` }}
+            style={{ width: `${(lettersReceived / 10) * 100}%` }}
           ></div>
         </div>
       </div>
