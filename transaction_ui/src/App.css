@@ -107,7 +107,7 @@ h1 {
 }
 
 .progress-bar {
-  width: 50%;
+  width: 40%;
   background-color: #ccc;
   height: 20px;
   border-radius: 10px;
@@ -144,7 +144,7 @@ h1 {
   position: absolute;
   left: 10vw;
   width: 80px;
-  animation: arcFly 3s ease-in-out forwards;
+  animation: arcFly 5s ease-in-out forwards;
   /* z-index: 2 */
 }
 
@@ -160,4 +160,30 @@ h1 {
   width: 80px;
   margin-bottom: 10px;
   left: 80%;
+}
+
+.global-progress-section {
+  margin-top: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+.global-progress-section p {
+  font-size: 16px;
+  color: rgb(180, 232, 226);
+}
+
+.global-progress-section .progress-bar {
+  width: 80%;
+  background-color: #ccc;
+  height: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 10px auto;
+}
+
+.global-progress-section .progress-bar-fill {
+  height: 100%;
+  background-color: #ff6347; /* Tomato color for the second progress bar */
+  transition: width 0.5s ease;
 }
