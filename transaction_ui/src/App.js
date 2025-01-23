@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
+import Sparkle from 'react-sparkle'
+
 import './App.css';
 import './animations.css';
 import owlImage from './assets/owl.png';
 import letterImage from './assets/letter.png';
 
 let N = 100; // Global variable for total remaining amount
-
+const SparklyThing = () => (
+  // Note: the parent of Sparkle must be positioned relatively or absolutely
+  <div style={{ position: 'relative' }}>
+    <Sparkle />
+  </div>
+)
 function App() {
   const [coins, setCoins] = useState(0); // Coins to send
   const [tripProgress, setTripProgress] = useState(0); // Progress for each trip
@@ -65,6 +72,32 @@ function App() {
   return (
     <div className="App">
       <header className="App-Body">
+      <nav className="navbar">
+      <Sparkle
+          color={'#FFF'}
+          count={250}
+
+          minSize={2}
+          maxSize={6}
+          overflowPx={10}
+
+          // How quickly sparkles disappear; in other words, how quickly
+          // new sparkles are created.
+          fadeOutSpeed={70}
+
+          // Whether we should create an entirely new sparkle when one
+          // fades out. If false, we'll just reset the opacity, keeping
+          // all other attributes of the sparkle the same.
+          newSparkleOnFadeOut={true}
+
+          flicker={true}
+
+          // How quickly the "flickering" should happen.
+          // One of: 'slowest', 'slower', 'slow', 'normal', 'fast', 'faster', 'fastest'
+          flickerSpeed={'slower'}
+        />
+</nav>
+        
         <h1>LUMAS TRANSACTION - Make it happen!</h1>
 
         {/* Input Section */}
