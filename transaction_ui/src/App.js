@@ -3,6 +3,7 @@ import Sparkle from 'react-sparkle'
 
 import './App.css';
 import './animations.css';
+import harryImage from './assets/harry.gif';
 import owlImage from './assets/owl.png';
 import letterImage from './assets/letter.png';
 
@@ -130,12 +131,16 @@ function App() {
         {/* Success Message */}
         {showSuccessMessage && (
           <div className="success-message">
-            <p>🎉 Amount Sent Successfully: {coins} Coins! 🎉</p>
+            <p>Amount Sent Successfully</p>
           </div>
         )}
 
         {/* Animation Section */}
         <div className="animation-section">
+        <img
+            src={harryImage}
+            alt="Harry"
+            className="harry-image" />
           <img
             src={owlImage}
             alt="Owl"

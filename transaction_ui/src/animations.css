@@ -21,6 +21,7 @@
   }
   100% {
       transform: translate(75vw, -10px); /* Fine-tune to match letterbox */
+      transform: translate(0, 0);
   }
 }
 
