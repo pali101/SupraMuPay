@@ -7,12 +7,7 @@ import owlImage from './assets/owl.png';
 import letterImage from './assets/letter.png';
 
 let N = 100; // Global variable for total remaining amount
-const SparklyThing = () => (
-  // Note: the parent of Sparkle must be positioned relatively or absolutely
-  <div style={{ position: 'relative' }}>
-    <Sparkle />
-  </div>
-)
+
 function App() {
   const [coins, setCoins] = useState(0); // Coins to send
   const [tripProgress, setTripProgress] = useState(0); // Progress for each trip
@@ -30,14 +25,18 @@ function App() {
 
       // Simulate trip progress for each trip (0 -> 100%)
       let tripProgress = 0;
+      const totalDuration = 2000; // Duration of one trip in ms
+      const stepDuration = 200; // Update progress every 100ms
+      const progressStep = 100 / (totalDuration / stepDuration); // Step size to reach 100%
+
       const progressInterval = setInterval(() => {
-        tripProgress += 10; // Increment by 10%
-        setTripProgress(tripProgress); // Update trip progress
+        tripProgress += progressStep; // Increment by calculated step
+        setTripProgress(Math.min(tripProgress, 100)); // Ensure it doesn't exceed 100%
 
         if (tripProgress >= 100) {
           clearInterval(progressInterval); // Stop when progress reaches 100%
         }
-      }, 100); // Smooth progress every 100ms
+      }, stepDuration);
 
       // Update global remaining amount after completing the current trip
       setRemainingAmount((prev) => prev - 10);
@@ -50,10 +49,11 @@ function App() {
         setTimeout(() => {
           setShowSuccessMessage(true);
           setDeliveryInProgress(false); // Unlock the form
-        }, 500);
+        }, 1000);
       }
-    }, 1000); // 1-second delay between trips
+    }, 2000); // 1-second delay between trips
   };
+
 
   const handleSendCoins = () => {
     if (coins <= 0 || deliveryInProgress || coins > remainingAmount) return;
@@ -72,32 +72,27 @@ function App() {
   return (
     <div className="App">
       <header className="App-Body">
-      <nav className="navbar">
-      <Sparkle
-          color={'#FFF'}
-          count={250}
+        <nav className="navbar">
+          <Sparkle
+            color={'#FFF'}
+            count={250}
 
-          minSize={2}
-          maxSize={6}
-          overflowPx={10}
+            minSize={2}
+            maxSize={6}
+            overflowPx={10}
 
-          // How quickly sparkles disappear; in other words, how quickly
-          // new sparkles are created.
-          fadeOutSpeed={70}
+            // How quickly sparkles disappear
+            fadeOutSpeed={70}
+            // Whether we should create an entirely new sparkle when one
+            // fades out. If false, we'll just reset the opacity, keeping
+            // all other attributes of the sparkle the same.
+            newSparkleOnFadeOut={true}
+            flicker={true}
+            // One of: 'slowest', 'slower', 'slow', 'normal', 'fast', 'faster', 'fastest'
+            flickerSpeed={'slower'}
+          />
+        </nav>
 
-          // Whether we should create an entirely new sparkle when one
-          // fades out. If false, we'll just reset the opacity, keeping
-          // all other attributes of the sparkle the same.
-          newSparkleOnFadeOut={true}
-
-          flicker={true}
-
-          // How quickly the "flickering" should happen.
-          // One of: 'slowest', 'slower', 'slow', 'normal', 'fast', 'faster', 'fastest'
-          flickerSpeed={'slower'}
-        />
-</nav>
-        
         <h1>LUMAS TRANSACTION - Make it happen!</h1>
 
         {/* Input Section */}
@@ -146,10 +141,13 @@ function App() {
             alt="Owl"
             className={`owl-image ${flightCount > 0 ? 'owl-flying' : ''}`}
             style={{
-              animationDelay: `${(flightCount - 1) * 1}s`, // Delay animation for each trip
+              animationDuration: '2s', // Match this to the interval duration
+              animationDelay: `${(flightCount - 1) * 2}s`, // Delay for each trip
               animationPlayState: 'running', // Ensure the animation plays fully each trip
             }}
           />
+
+
           <div className="letterbox">
             <img src={letterImage} alt="Letter" className="letter-image" />
             <p>Dumbledore</p>
