@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Sparkle from 'react-sparkle'
+import WalletConnection from './components/walletConnect.tsx';
 
 import './App.css';
 import './animations.css';
@@ -16,6 +17,7 @@ function App() {
   const [remainingAmount, setRemainingAmount] = useState(N); // Track the remaining global balance
   const [flightCount, setFlightCount] = useState(0); // Track current flight
   const [showSuccessMessage, setShowSuccessMessage] = useState(false); // Control success pop-up visibility
+  const [account, setAccount] = useState(null); //Wallet Connection
 
   const sendOwl = (trips) => {
     let currentFlight = 0;
@@ -92,6 +94,9 @@ function App() {
             // One of: 'slowest', 'slower', 'slow', 'normal', 'fast', 'faster', 'fastest'
             flickerSpeed={'slower'}
           />
+          <div className="wallet-section">
+            <WalletConnection account={account} setAccount={setAccount} />
+          </div>
         </nav>
 
         <h1>LUMAS TRANSACTION - Make it happen!</h1>
