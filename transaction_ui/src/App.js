@@ -45,13 +45,15 @@ function App() {
       // Update global remaining amount after completing the current trip
       setRemainingAmount((prev) => prev - 10);
 
-      // Stop after all trips
       if (currentFlight === trips) {
         clearInterval(interval);
 
         // Show success message briefly
         setTimeout(() => {
           setShowSuccessMessage(true);
+          setTimeout(() => {
+            setShowSuccessMessage(false);
+          }, 3000); // Disappear after 3 seconds
           setDeliveryInProgress(false); // Unlock the form
         }, 1000);
       }
@@ -134,16 +136,19 @@ function App() {
           </div>
         )}
 
-        {/* Success Message */}
+        {/* Success Message as a Toast */}
         {showSuccessMessage && (
-          <div className="success-message">
-            <p>Amount Sent Successfully</p>
+          <div
+           className='success-message'
+          >
+            Amount Sent Successfully!
           </div>
         )}
 
+
         {/* Animation Section */}
         <div className="animation-section">
-        <img
+          <img
             src={harryImage}
             alt="Harry"
             className="harry-image" />
