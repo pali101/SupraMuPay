@@ -16,7 +16,7 @@
 }
 
 .App-Body {
-  min-height: 100vh;
+  min-height: 86vh;
   padding: 50px;
   display: flex;
   flex-direction: column;
@@ -159,12 +159,12 @@ h1 {
   text-align: center;
   position: absolute;
   left: 75%;
-  top: 50%;
+  /* top: 50%; */
 }
 
 .dumbledore-image{
   width: 240px;
-  margin-bottom: 40px;
+  /* margin-bottom: 40px; */
   left: 85%;
 }
 
