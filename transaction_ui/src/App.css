@@ -206,3 +206,78 @@ h1 {
     font-size: '1rem';
     animation: 'fadeOut 3.5s forwards';
 }
+
+.wallet-container {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+
+.wallet-address {
+  margin-right: 10px; /* Space between text & button */
+  font-size: 14px;
+  color: white;
+}
+
+.wallet-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.connect-wallet {
+  background-color: #216e25;
+  color: white;
+}
+
+/* Disconnect Wallet Button */
+.disconnect-wallet {
+  background-color: #ff5757;
+  color: white;
+}
+
+/* Button Hover Effect */
+.wallet-button:hover {
+  opacity: 0.8;
+}
+.wallet-container {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+
+.wallet-address {
+  margin-right: 10px; /* Space between text & button */
+  font-size: 14px;
+  color: white;
+}
+
+.wallet-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.connect-wallet {
+  background-color: #216e25;
+  color: white;
+}
+
+/* Disconnect Wallet Button */
+.disconnect-wallet {
+  background-color: #ff5757;
+  color: white;
+}
+
+/* Button Hover Effect */
+.wallet-button:hover {
+  opacity: 0.8;
+}
