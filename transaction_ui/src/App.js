@@ -7,6 +7,7 @@ import './animations.css';
 import harryImage from './assets/harry.gif';
 import owlImage from './assets/owl.png';
 import letterImage from './assets/letter.png';
+import dumbledoreImage from './assets/dumbledore.png';
 
 let N = 100; // Global variable for total remaining amount
 
@@ -158,8 +159,9 @@ function App() {
           />
 
 
-          <div className="letterbox">
+          <div className="dumbledore">
             <img src={letterImage} alt="Letter" className="letter-image" />
+            <img src={dumbledoreImage} alt="Dumbledore" className="dumbledore-image" />
             <p>Dumbledore</p>
 
             {/* Remaining Amount Section */}
