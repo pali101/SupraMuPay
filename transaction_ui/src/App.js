@@ -9,13 +9,13 @@ import owlImage from './assets/owl.png';
 import letterImage from './assets/letter.png';
 import dumbledoreImage from './assets/dumbledore.png';
 
-let N = 100; // Global variable for total remaining amount
+let N = 100; // Global variable for total received amount
 
 function App() {
   const [coins, setCoins] = useState(0); // Coins to send
   const [tripProgress, setTripProgress] = useState(0); // Progress for each trip
   const [deliveryInProgress, setDeliveryInProgress] = useState(false); // Block actions during delivery
-  const [remainingAmount, setRemainingAmount] = useState(N); // Track the remaining global balance
+  const [receivedAmount, setreceivedAmount] = useState(0); // Track the received global balance
   const [flightCount, setFlightCount] = useState(0); // Track current flight
   const [showSuccessMessage, setShowSuccessMessage] = useState(false); // Control success pop-up visibility
   const [account, setAccount] = useState(null); //Wallet Connection
@@ -42,8 +42,8 @@ function App() {
         }
       }, stepDuration);
 
-      // Update global remaining amount after completing the current trip
-      setRemainingAmount((prev) => prev - 10);
+      // Update global received amount after completing the current trip
+      setreceivedAmount((prev) => prev + 10);
 
       if (currentFlight === trips) {
         clearInterval(interval);
@@ -62,7 +62,7 @@ function App() {
 
 
   const handleSendCoins = () => {
-    if (coins <= 0 || deliveryInProgress || coins > remainingAmount) return;
+    if (coins <= 0 || deliveryInProgress || coins > 100-receivedAmount) return;
 
     const trips = Math.floor(coins / 10); // Determine the number of trips (10 coins per trip)
 
@@ -117,7 +117,7 @@ function App() {
           <button
             className="send-button"
             onClick={handleSendCoins}
-            disabled={deliveryInProgress || coins <= 0 || coins > remainingAmount}
+            disabled={deliveryInProgress || coins <= 0 || coins > 100-receivedAmount}
           >
             {deliveryInProgress ? 'Delivery in Progress...' : 'Send'}
           </button>
@@ -167,15 +167,14 @@ function App() {
           <div className="dumbledore">
             <img src={letterImage} alt="Letter" className="letter-image" />
             <img src={dumbledoreImage} alt="Dumbledore" className="dumbledore-image" />
-            <p>Dumbledore</p>
 
-            {/* Remaining Amount Section */}
+            {/* received Amount Section */}
             <div className="global-progress-section">
-              <p>Remaining Amount: {remainingAmount}</p>
+              <p>Amt Received: {receivedAmount}</p>
               <div className="progress-bar">
                 <div
                   className="progress-bar-fill"
-                  style={{ width: `${(remainingAmount / N) * 100}%` }}
+                  style={{ width: `${((receivedAmount) / 100) * 100}%` }}
                 ></div>
               </div>
             </div>
