@@ -5,7 +5,8 @@ import WalletConnection from './components/walletConnect.tsx';
 import './App.css';
 import './animations.css';
 import harryImage from './assets/harry.gif';
-import owlImage from './assets/owl.png';
+// import owlImage from './assets/owl.png';
+import owlImage from './assets/owl_flying.gif';
 import letterImage from './assets/letter.png';
 import dumbledoreImage from './assets/dumbledore.png';
 
