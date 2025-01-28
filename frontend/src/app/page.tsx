@@ -1,8 +1,23 @@
 'use client';
 import React, { useState } from 'react';
 import WalletConnection from './components/walletConnect';
+import Micropayement from './components/SmartContractInteraction';
 import TransactionPage from './components/TransactionSender';
-import SmartContractInteraction from './components/SmartContractInteraction'; 
+import SignMessage from './components/signMessage';
+
+
+export const getProvider = () => {
+  if ('starkey' in window) {
+    const provider = (window.starkey as { supra: any })?.supra;
+    if (provider) {
+      return provider;
+    }
+  }
+
+  // Redirect to the official StarKey wallet website if not installed
+  window.open('https://starkey.app/', '_blank');
+  return null;
+};
 
 export default function Home() {
   const [account, setAccount] = useState<string | null>(null);
@@ -14,7 +29,7 @@ export default function Home() {
           <span>mPay</span> DApp
         </div>
         <div className="flex items-center gap-4">
-          <WalletConnection account={account} setAccount={setAccount} />
+          <WalletConnection {...{ account, setAccount }} />
         </div>
       </header>
 
@@ -36,7 +51,11 @@ export default function Home() {
           {/* Smart Contract Interaction Section */}
           <div className="bg-gray-50 p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Interact with Smart Contract</h2>
-            <SmartContractInteraction account={account} />
+            <Micropayement account={account ?? ''} />
+          </div>
+          <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Sign a Message</h2>
+            <SignMessage account={account ?? ''} />
           </div>
         </section>
       </main>
@@ -52,7 +71,5 @@ export default function Home() {
     </div>
   );
 }
-
-
 
 

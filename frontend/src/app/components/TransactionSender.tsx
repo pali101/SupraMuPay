@@ -1,32 +1,17 @@
 'use client';
 import React, { useState } from 'react';
+import { getProvider } from '../page';
 
 type StarkeyProvider = {
   account: () => Promise<string[]>;
   sendTransaction: (transaction: { from: string; to: string; value: string }) => Promise<string>;
 };
 
-type TransactionPageProps = {
+type PageProps = {
   account: string | null;
 };
 
-const getProvider = (): StarkeyProvider | null => {
-  if (typeof window !== 'undefined' && 'starkey' in window) {
-    const provider = (window.starkey as { supra: StarkeyProvider })?.supra;
-    if (provider) {
-      return { 
-        account: provider.account, 
-        sendTransaction: provider.sendTransaction,
-      };
-    }
-  }
-
-  // Redirect to the official StarKey wallet website if not installed
-  window.open('https://starkey.app/', '_blank');
-  return null;
-};
-
-const TransactionPage: React.FC<TransactionPageProps> = ({ account }) => {
+const TransactionPage: React.FC<PageProps> = ({ account }) => {
   const [toAddress, setToAddress] = useState('');
   const [amount, setAmount] = useState('');
   const [txHash, setTxHash] = useState<string | null>(null);

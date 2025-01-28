@@ -1,116 +1,297 @@
 'use client';
 import React, { useState } from 'react';
+import { createChannel } from '../functions/createChannel';
+import { redeemChannel } from '../functions/redeemChannel';
+import { getProvider } from '../page';
 
-type SmartContractInteractionProps = {
+type PageProps = {
   account: string | null;
 };
 
-const getProvider = () => {
-  if ('starkey' in window) {
-    const provider = (window.starkey as { supra: any })?.supra;
-    return provider;
-  }
-  return null;
-};
-
-const SmartContractInteraction: React.FC<SmartContractInteractionProps> = ({ account }) => {
-  const [contractAddress, setContractAddress] = useState('');
-  const [methodName, setMethodName] = useState('');
-  const [args, setArgs] = useState('');
-  const [txHash, setTxHash] = useState<string | null>(null);
+const Micropayement: React.FC<PageProps> = ({ account }) => {
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [txHash, setTxHash] = useState<string | null>(null);
 
-  const interactWithContract = async () => {
-    const provider = getProvider();
-    if (!provider || !account) {
-      setError('Please connect your wallet first.');
+  const [isCreateMode, setIsCreateMode] = useState(true); // Toggle between Create and Redeem views
+
+  // Form fields for Create Channel
+  const [merchantAddress, setMerchantAddress] = useState('');
+  const [amount, setAmount] = useState<number | string>('');
+  const [totalChannelAmount, setTotalChannelAmount] = useState<number | string>('');
+  const [trustAnchor, setTrustAnchor] = useState('');
+
+  // Form fields for Redeem Channel
+  const [redeemHex, setRedeemHex] = useState('');
+  const [redeemHexHeight, setRedeemHexHeight] = useState<number | string>('');
+
+  const handleCreateChannel = async () => {
+    setLoading(true);
+    setError(null);
+
+    // Validate input fields
+    if (!merchantAddress || !amount || !totalChannelAmount || !trustAnchor) {
+      setError('Please fill in all fields for creating a channel.');
+      setLoading(false);
       return;
     }
-
-    if (!contractAddress || !methodName || !args) {
-      setError('Please provide contract address, method name, and arguments.');
-      return;
-    }
-
+   const supraProvider = await getProvider();
     try {
-      const contract = new provider.Contract(contractAddress, /* ABI here */);
-      const result = await contract.methods[methodName](...JSON.parse(args)).send({ from: account });
-      setTxHash(result.transactionHash);
-      console.log('Transaction sent, txHash:', result.transactionHash);
+      const txHash = await createChannel(
+        supraProvider,
+        merchantAddress,
+        Number(amount),
+        Number(totalChannelAmount),
+        trustAnchor
+      );
+      setTxHash(txHash);
+      setError(null);
     } catch (err) {
-      console.error('Error interacting with contract:', err);
-      setError('Transaction failed. Please try again.');
+      console.error('Error creating channel:', err);
+      setError(err instanceof Error ? err.message : 'Failed to create channel');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRedeemChannel = async () => {
+    setLoading(true);
+    setError(null);
+
+    // Validate input fields
+    if (!redeemHex || !redeemHexHeight) {
+      setError('Please fill in all fields for redeeming a channel.');
+      setLoading(false);
+      return;
+    }
+    const supraProvider = await getProvider();
+    try {
+      const txHash = await redeemChannel(supraProvider, redeemHex, Number(redeemHexHeight));
+      setTxHash(txHash);
+      setError(null);
+    } catch (err) {
+      console.error('Error redeeming channel:', err);
+      setError(err instanceof Error ? err.message : 'Failed to redeem channel');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="container p-6 bg-white shadow-lg rounded-lg w-full sm:w-3/4 md:w-1/2 mx-auto my-8">
-      <h1 className="text-2xl font-semibold mb-4 text-gray-800">Interact with Smart Contract</h1>
+    <div
+      style={{
+        maxWidth: '500px',
+        margin: '0 auto',
+        fontFamily: 'Arial, sans-serif',
+        textAlign: 'center',
+        padding: '20px',
+        backgroundColor: '#f5f5f5',
+        color: '#333',
+        borderRadius: '10px',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+      }}
+    >
+      <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>
+        Supra Channel Operations
+      </h2>
 
-      {/* Input Fields for Contract Interaction */}
-      <div className="mb-4">
-        <label htmlFor="contractAddress" className="block text-sm text-gray-700">Contract Address:</label>
-        <input
-          id="contractAddress"
-          type="text"
-          value={contractAddress}
-          onChange={(e) => setContractAddress(e.target.value)}
-          placeholder="Enter contract address"
-          className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      <div className="mb-4">
-        <label htmlFor="methodName" className="block text-sm text-gray-700">Method Name:</label>
-        <input
-          id="methodName"
-          type="text"
-          value={methodName}
-          onChange={(e) => setMethodName(e.target.value)}
-          placeholder="Enter method name"
-          className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      <div className="mb-6">
-        <label htmlFor="args" className="block text-sm text-gray-700">Arguments (JSON):</label>
-        <input
-          id="args"
-          type="text"
-          value={args}
-          onChange={(e) => setArgs(e.target.value)}
-          placeholder='["arg1", "arg2"]'
-          className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      <button
-        onClick={interactWithContract}
-        className="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 focus:outline-none"
-      >
-        Interact with Contract
-      </button>
-
-      {/* Display error or success message */}
-      {error && <p className="text-red-500 mt-4">{error}</p>}
-      {txHash && (
-        <div className="mt-6">
-          <p className="text-lg text-green-600">Transaction successful!</p>
-          <p>
-            Transaction Hash: 
-            <a 
-              href={`https://explorer.starkey.app/tx/${txHash}`} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-blue-500 underline"
+      {account ? (
+        <>
+          {/* Switch between Create and Redeem */}
+          <div style={{ marginBottom: '20px' }}>
+            <button
+              onClick={() => setIsCreateMode(true)}
+              style={{
+                padding: '10px 20px',
+                marginRight: '10px',
+                backgroundColor: isCreateMode ? '#007BFF' : '#E0E0E0',
+                color: isCreateMode ? 'white' : '#333',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                border: 'none',
+              }}
             >
-              {txHash}
-            </a>
-          </p>
+              Create Channel
+            </button>
+            <button
+              onClick={() => setIsCreateMode(false)}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: !isCreateMode ? '#28A745' : '#E0E0E0',
+                color: !isCreateMode ? 'white' : '#333',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                border: 'none',
+              }}
+            >
+              Redeem Channel
+            </button>
+          </div>
+
+          {isCreateMode ? (
+            <div>
+              <h3 style={{ marginBottom: '10px' }}>Create Channel</h3>
+              <input
+                type="text"
+                placeholder="Merchant Address"
+                value={merchantAddress}
+                onChange={(e) => setMerchantAddress(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  marginBottom: '10px',
+                  borderRadius: '5px',
+                  border: '1px solid #ccc',
+                }}
+              />
+              <input
+                type="number"
+                placeholder="Amount"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  marginBottom: '10px',
+                  borderRadius: '5px',
+                  border: '1px solid #ccc',
+                }}
+              />
+              <input
+                type="number"
+                placeholder="Total Channel Amount"
+                value={totalChannelAmount}
+                onChange={(e) => setTotalChannelAmount(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  marginBottom: '10px',
+                  borderRadius: '5px',
+                  border: '1px solid #ccc',
+                }}
+              />
+              <input
+                type="text"
+                placeholder="Trust Anchor"
+                value={trustAnchor}
+                onChange={(e) => setTrustAnchor(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  marginBottom: '10px',
+                  borderRadius: '5px',
+                  border: '1px solid #ccc',
+                }}
+              />
+              <button
+                onClick={handleCreateChannel}
+                disabled={loading }
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#007BFF',
+                  color: 'white',
+                  borderRadius: '5px',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  opacity: loading ? 0.6 : 1,
+                  border: 'none',
+                }}
+              >
+                {loading ? 'Creating Channel...' : 'Create Channel'}
+              </button>
+            </div>
+          ) : (
+            <div>
+              <h3 style={{ marginBottom: '10px' }}>Redeem Channel</h3>
+              <input
+                type="text"
+                placeholder="Redeem Hex"
+                value={redeemHex}
+                onChange={(e) => setRedeemHex(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  marginBottom: '10px',
+                  borderRadius: '5px',
+                  border: '1px solid #ccc',
+                }}
+              />
+              <input
+                type="number"
+                placeholder="Redeem Hex Height"
+                value={redeemHexHeight}
+                onChange={(e) => setRedeemHexHeight(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  marginBottom: '10px',
+                  borderRadius: '5px',
+                  border: '1px solid #ccc',
+                }}
+              />
+              <button
+                onClick={handleRedeemChannel}
+                disabled={loading }
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#28A745',
+                  color: 'white',
+                  borderRadius: '5px',
+                  cursor: loading  ? 'not-allowed' : 'pointer',
+                  opacity: loading ? 0.6 : 1,
+                  border: 'none',
+                }}
+              >
+                {loading ? 'Redeeming Channel...' : 'Redeem Channel'}
+              </button>
+            </div>
+          )}
+
+          {/* Error Display */}
+          {error && (
+            <div
+              style={{
+                padding: '10px',
+                backgroundColor: '#F8D7DA',
+                color: '#721C24',
+                borderRadius: '5px',
+                marginTop: '10px',
+              }}
+            >
+              {error}
+            </div>
+          )}
+
+          {/* Transaction Hash Display */}
+          {txHash && (
+            <div
+              style={{
+                padding: '10px',
+                backgroundColor: '#D4EDDA',
+                color: '#155724',
+                borderRadius: '5px',
+                marginTop: '10px',
+              }}
+            >
+              Transaction Hash:{' '}
+              <a
+                href={`https://explorer.supra.com/tx/${txHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#007BFF', textDecoration: 'underline' }}
+              >
+                {txHash}
+              </a>
+            </div>
+          )}
+        </>
+      ) : (
+        // If no account is available, ask to connect
+        <div>
+          <p style={{ color: '#FF6347' }}>Please connect your wallet to proceed.</p>
         </div>
       )}
     </div>
   );
 };
 
-export default SmartContractInteraction;
+export default Micropayement;

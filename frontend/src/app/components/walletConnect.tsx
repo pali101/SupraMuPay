@@ -20,6 +20,30 @@ const getProvider = () => {
 
 const WalletConnection: React.FC<WalletConnectionProps> = ({ account, setAccount }) => {
   const [isConnecting, setIsConnecting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [balance, setBalance] = useState<{
+    balance: string;
+    formattedBalance: string;
+    decimal: number;
+    displayUnit: string;
+  } | null>(null);
+
+  const fetchBalance = async () => {
+    const provider = getProvider();
+    if (!provider) {
+      setError('Provider not found. Make sure the wallet is connected.');
+      return;
+    }
+
+    try {
+      const walletBalance = await provider.balance();
+      setBalance(walletBalance);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching balance:', err);
+      setError('Failed to fetch balance.');
+    }
+  };
 
   const connectWallet = async () => {
     const provider = getProvider();
@@ -71,6 +95,27 @@ const WalletConnection: React.FC<WalletConnectionProps> = ({ account, setAccount
             >
               Disconnect Wallet
             </button>
+            <div className="p-6 bg-white rounded shadow-md max-w-md mx-auto mt-8">
+              <h2 className="text-2xl font-semibold mb-4">Test Wallet Balance</h2>
+
+              <button
+                onClick={fetchBalance}
+                className="px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700"
+              >
+                Fetch Balance
+              </button>
+
+              {balance && (
+                <div className="text-green-600 mt-4">
+                  <p>Raw Balance: {balance.balance}</p>
+                  <p>Formatted Balance: {balance.formattedBalance}</p>
+                  <p>Decimal Places: {balance.decimal}</p>
+                  <p>Unit: {balance.displayUnit}</p>
+                </div>
+              )}
+
+              {error && <p className="text-red-500 mt-4">{error}</p>}
+            </div>
           </>
         ) : (
           <button
