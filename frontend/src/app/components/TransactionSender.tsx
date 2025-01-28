@@ -117,7 +117,7 @@ const TransactionPage: React.FC<PageProps> = ({ account }) => {
           <p>
             Transaction Hash: 
             <a 
-              href={`https://explorer.starkey.app/tx/${txHash}`} 
+              href={`https://testnet.suprascan.io/tx/${txHash}`} 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-blue-500 underline"

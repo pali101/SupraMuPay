@@ -274,7 +274,7 @@ const Micropayement: React.FC<PageProps> = ({ account }) => {
             >
               Transaction Hash:{' '}
               <a
-                href={`https://explorer.supra.com/tx/${txHash}`}
+                href={`https://testnet.suprascan.io/tx/${txHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: '#007BFF', textDecoration: 'underline' }}
