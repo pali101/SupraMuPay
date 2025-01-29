@@ -5,7 +5,7 @@ interface WalletConnectionProps {
   setAccount: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const getProvider = () => {
+export const getProvider = () => {
   if ('starkey' in window) {
     const provider = (window.starkey as { supra: any })?.supra;
     if (provider) {

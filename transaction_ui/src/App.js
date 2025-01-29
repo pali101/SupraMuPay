@@ -1,78 +1,126 @@
 import React, { useState } from 'react';
-import Sparkle from 'react-sparkle'
+import Sparkle from 'react-sparkle';
 import WalletConnection from './components/walletConnect.tsx';
+import { redeemChannel } from './functions/redeemChannel.ts';  // import redeemChannel function
+import { createChannel } from './functions/createChannel.ts';  // import createChannel function
 
 import './App.css';
 import './animations.css';
 import harryImage from './assets/harry.gif';
-// import owlImage from './assets/owl.png';
 import owlImage from './assets/owl_flying.gif';
 import letterImage from './assets/letter.png';
 import dumbledoreImage from './assets/dumbledore.png';
 
-let N = 100; // Global variable for total received amount
+let N = 100;
 
 function App() {
-  const [coins, setCoins] = useState(0); // Coins to send
-  const [tripProgress, setTripProgress] = useState(0); // Progress for each trip
-  const [deliveryInProgress, setDeliveryInProgress] = useState(false); // Block actions during delivery
-  const [receivedAmount, setreceivedAmount] = useState(0); // Track the received global balance
-  const [flightCount, setFlightCount] = useState(0); // Track current flight
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false); // Control success pop-up visibility
-  const [account, setAccount] = useState(null); //Wallet Connection
+  const [coins, setCoins] = useState(0);
+  const [tripProgress, setTripProgress] = useState(0);
+  const [deliveryInProgress, setDeliveryInProgress] = useState(false);
+  const [receivedAmount, setreceivedAmount] = useState(0);
+  const [flightCount, setFlightCount] = useState(0);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [account, setAccount] = useState(null);
+  const [showCreateChannel, setShowCreateChannel] = useState(false); 
+  const [showRedeemChannel, setShowRedeemChannel] = useState(false); 
+  const [createChannelData, setCreateChannelData] = useState({ channelName: '', amount: '', trustAnchor: '' });
+  const [redeemChannelData, setRedeemChannelData] = useState({ redeemHex: '', redeemHexHeight: '' });
 
   const sendOwl = (trips) => {
     let currentFlight = 0;
 
     const interval = setInterval(() => {
       currentFlight++;
-      setFlightCount(currentFlight); // Update flight number for the animation
+      setFlightCount(currentFlight);
 
-      // Simulate trip progress for each trip (0 -> 100%)
       let tripProgress = 0;
-      const totalDuration = 2000; // Duration of one trip in ms
-      const stepDuration = 200; // Update progress every 100ms
-      const progressStep = 100 / (totalDuration / stepDuration); // Step size to reach 100%
+      const totalDuration = 2000;
+      const stepDuration = 200;
+      const progressStep = 100 / (totalDuration / stepDuration);
 
       const progressInterval = setInterval(() => {
-        tripProgress += progressStep; // Increment by calculated step
-        setTripProgress(Math.min(tripProgress, 100)); // Ensure it doesn't exceed 100%
+        tripProgress += progressStep;
+        setTripProgress(Math.min(tripProgress, 100));
 
         if (tripProgress >= 100) {
-          clearInterval(progressInterval); // Stop when progress reaches 100%
+          clearInterval(progressInterval);
         }
       }, stepDuration);
 
-      // Update global received amount after completing the current trip
       setreceivedAmount((prev) => prev + 10);
 
       if (currentFlight === trips) {
         clearInterval(interval);
 
-        // Show success message briefly
         setTimeout(() => {
           setShowSuccessMessage(true);
           setTimeout(() => {
             setShowSuccessMessage(false);
-          }, 3000); // Disappear after 3 seconds
-          setDeliveryInProgress(false); // Unlock the form
+          }, 3000);
+          setDeliveryInProgress(false);
         }, 1000);
       }
-    }, 2000); // 1-second delay between trips
+    }, 2000);
   };
 
-
   const handleSendCoins = () => {
-    if (coins <= 0 || deliveryInProgress || coins > 100-receivedAmount) return;
+    if (coins <= 0 || deliveryInProgress || coins > 100 - receivedAmount) return;
 
-    const trips = Math.floor(coins / 10); // Determine the number of trips (10 coins per trip)
+    const trips = Math.floor(coins / 10);
 
     if (trips > 0) {
-      setDeliveryInProgress(true); // Lock the form
-      setTripProgress(0); // Reset progress for each trip
-      setFlightCount(0); // Reset the owl's flight count
-      setShowSuccessMessage(false); // Reset success pop-up
-      sendOwl(trips); // Start the trips
+      setDeliveryInProgress(true);
+      setTripProgress(0);
+      setFlightCount(0);
+      setShowSuccessMessage(false);
+      sendOwl(trips);
+    }
+  };
+
+  const toggleCreateChannel = () => {
+    setShowCreateChannel(!showCreateChannel);
+  };
+
+  const toggleRedeemChannel = () => {
+    setShowRedeemChannel(!showRedeemChannel);
+  };
+
+  const handleCreateChannel = async () => {
+    const { channelName, amount, trustAnchor } = createChannelData;
+
+    if (channelName && amount && trustAnchor) {
+      try {
+        const supraProvider = account; // Assume 'account' contains the wallet provider
+        const merchantAddress = "0x123..."; // Replace with actual merchant address
+        const totalChannelAmount = 1000000; // Replace with actual total channel amount
+
+        // Call the createChannel function
+        await createChannel(supraProvider, merchantAddress, parseInt(amount), totalChannelAmount, trustAnchor);
+        alert('Channel Created Successfully');
+        setShowCreateChannel(false);
+      } catch (error) {
+        console.error('Create Channel failed:', error);
+      }
+    } else {
+      alert('Please enter valid channel details.');
+    }
+  };
+
+  const handleRedeemChannel = async () => {
+    const { redeemHex, redeemHexHeight } = redeemChannelData;
+
+    if (redeemHex && redeemHexHeight) {
+      try {
+        // Get the wallet provider (supraProvider from the WalletConnection component)
+        const supraProvider = account; // Assume 'account' contains the wallet provider
+        await redeemChannel(supraProvider, redeemHex, parseInt(redeemHexHeight));
+        alert('Channel Redeemed Successfully');
+        setShowRedeemChannel(false);
+      } catch (error) {
+        console.error('Redeem Channel failed:', error);
+      }
+    } else {
+      alert('Please enter valid redeem details.');
     }
   };
 
@@ -83,23 +131,20 @@ function App() {
           <Sparkle
             color={'#FFF'}
             count={250}
-
             minSize={2}
             maxSize={6}
             overflowPx={10}
-
-            // How quickly sparkles disappear
             fadeOutSpeed={70}
-            // Whether we should create an entirely new sparkle when one
-            // fades out. If false, we'll just reset the opacity, keeping
-            // all other attributes of the sparkle the same.
             newSparkleOnFadeOut={true}
             flicker={true}
-            // One of: 'slowest', 'slower', 'slow', 'normal', 'fast', 'faster', 'fastest'
             flickerSpeed={'slower'}
           />
           <div className="wallet-section">
             <WalletConnection account={account} setAccount={setAccount} />
+          </div>
+          <div className="navbar-buttons">
+            <button onClick={toggleCreateChannel}>Create Channel</button>
+            <button onClick={toggleRedeemChannel}>Redeem Channel</button>
           </div>
         </nav>
 
@@ -118,7 +163,7 @@ function App() {
           <button
             className="send-button"
             onClick={handleSendCoins}
-            disabled={deliveryInProgress || coins <= 0 || coins > 100-receivedAmount}
+            disabled={deliveryInProgress || coins <= 0 || coins > 100 - receivedAmount}
           >
             {deliveryInProgress ? 'Delivery in Progress...' : 'Send'}
           </button>
@@ -129,59 +174,117 @@ function App() {
           <div className="progress-section">
             <p>{tripProgress.toFixed(0)}%</p>
             <div className="progress-bar">
-              <div
-                className="progress-bar-fill"
-                style={{ width: `${tripProgress}%` }}
-              ></div>
+              <div className="progress-bar-fill" style={{ width: `${tripProgress}%` }}></div>
             </div>
           </div>
         )}
 
         {/* Success Message as a Toast */}
         {showSuccessMessage && (
-          <div
-           className='success-message'
-          >
-            Amount Sent Successfully!
-          </div>
+          <div className="success-message">Amount Sent Successfully!</div>
         )}
-
 
         {/* Animation Section */}
         <div className="animation-section">
-          <img
-            src={harryImage}
-            alt="Harry"
-            className="harry-image" />
+          <img src={harryImage} alt="Harry" className="harry-image" />
           <img
             src={owlImage}
             alt="Owl"
             className={`owl-image ${flightCount > 0 ? 'owl-flying' : ''}`}
             style={{
-              animationDuration: '2s', // Match this to the interval duration
-              animationDelay: `${(flightCount - 1) * 2}s`, // Delay for each trip
-              animationPlayState: 'running', // Ensure the animation plays fully each trip
+              animationDuration: '2s',
+              animationDelay: `${(flightCount - 1) * 2}s`,
+              animationPlayState: 'running',
             }}
           />
-
-
           <div className="dumbledore">
             <img src={letterImage} alt="Letter" className="letter-image" />
             <img src={dumbledoreImage} alt="Dumbledore" className="dumbledore-image" />
-
-            {/* received Amount Section */}
             <div className="global-progress-section">
               <p>Amt Received: {receivedAmount}</p>
               <div className="progress-bar">
                 <div
                   className="progress-bar-fill"
-                  style={{ width: `${((receivedAmount) / 100) * 100}%` }}
+                  style={{ width: `${(receivedAmount / 100) * 100}%` }}
                 ></div>
               </div>
             </div>
           </div>
         </div>
       </header>
+
+      {/* Create Channel Form Popup */}
+      {showCreateChannel && (
+        <div className="form-popup">
+          <div className="form-content">
+            <h2>Create Channel</h2>
+            <button className="close-btn" onClick={toggleCreateChannel}>X</button>
+            <form onSubmit={(e) => e.preventDefault()}>
+  <label>
+    Channel Name:
+    <input
+      type="text"
+      value={createChannelData.channelName}
+      onChange={(e) => setCreateChannelData({ ...createChannelData, channelName: e.target.value })}
+    />
+  </label>
+  
+  <label>
+    Amount:
+    <input
+      type="number"
+      value={createChannelData.amount}
+      onChange={(e) => setCreateChannelData({ ...createChannelData, amount: e.target.value })}
+    />
+  </label>
+  
+  <label>
+    Trust Anchor:
+    <input
+      type="text"
+      value={createChannelData.trustAnchor}
+      onChange={(e) => setCreateChannelData({ ...createChannelData, trustAnchor: e.target.value })}
+    />
+  </label>
+  
+  <button type="button" onClick={handleCreateChannel}>Create</button>
+</form>
+
+          </div>
+        </div>
+      )}
+
+      {/* Redeem Channel Form Popup */}
+      {showRedeemChannel && (
+        <div className="form-popup">
+          <div className="form-content">
+            <h2>Redeem Channel</h2>
+            <button className="close-btn" onClick={toggleRedeemChannel}>X</button>
+            <form onSubmit={(e) => e.preventDefault()}>
+  <label>
+    Redeem Hex:
+    <input
+      type="text"
+      value={redeemChannelData.redeemHex}
+      onChange={(e) => setRedeemChannelData({ ...redeemChannelData, redeemHex: e.target.value })}
+    />
+  </label>
+  
+  <label>
+    Redeem Hex Height:
+    <input
+      type="number"
+      value={redeemChannelData.redeemHexHeight}
+      onChange={(e) => setRedeemChannelData({ ...redeemChannelData, redeemHexHeight: e.target.value })}
+    />
+  </label>
+  
+  <button type="button" onClick={handleRedeemChannel}>Redeem</button>
+</form>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 }

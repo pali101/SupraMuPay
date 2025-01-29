@@ -14,6 +14,105 @@
   top: 0;
   z-index: 1000;
 }
+/* Navbar Buttons */
+.navbar-buttons {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  margin-right: 10px;
+  /* display: flex;
+  justify-content: flex-end; */
+  gap: 15px;
+}
+
+.navbar-buttons button {
+  padding: 10px;
+  background-color: #216e25;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.navbar-buttons button:hover {
+  background-color: #226225;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between the form elements */
+}
+
+form label {
+  display: block; /* Ensure each label is on a new line */
+  font-size: 16px;
+  color: #333; /* Adjust color as per your design */
+}
+
+form input {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #45a049;
+}
+
+/* Popup Form Styles */
+.form-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 400px;
+  position: relative;
+}
+
+.form-content h2 {
+  margin-bottom: 20px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ff5757;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background-color: #e54d4d;
+}
+
 
 .App-Body {
   min-height: 86vh;
@@ -92,7 +191,7 @@ h1 {
 }
 
 .send-button:hover {
-  background-color: #216e25;
+  background-color: #226225;
 }
 
 .send-button:disabled {
@@ -210,43 +309,6 @@ h1 {
     animation: 'fadeOut 3s forwards';
 }
 
-.wallet-container {
-  display: flex;
-  align-items: center;
-  position: absolute;
-  top: 10px;
-  right: 20px;
-}
-
-.wallet-address {
-  margin-right: 10px; /* Space between text & button */
-  font-size: 14px;
-  color: white;
-}
-
-.wallet-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.connect-wallet {
-  background-color: #216e25;
-  color: white;
-}
-
-/* Disconnect Wallet Button */
-.disconnect-wallet {
-  background-color: #ff5757;
-  color: white;
-}
-
-/* Button Hover Effect */
-.wallet-button:hover {
-  opacity: 0.8;
-}
 .wallet-container {
   display: flex;
   align-items: center;
