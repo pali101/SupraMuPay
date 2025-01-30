@@ -3,7 +3,7 @@ import Sparkle from 'react-sparkle';
 import WalletConnection from './components/walletConnect.tsx';
 import { redeemChannel } from './functions/redeemChannel.ts';  // import redeemChannel function
 import { createChannel } from './functions/createChannel.ts';  // import createChannel function
-
+import { getProvider } from './components/walletConnect.tsx';
 import './App.css';
 import './animations.css';
 import harryImage from './assets/harry.gif';
@@ -21,8 +21,8 @@ function App() {
   const [flightCount, setFlightCount] = useState(0);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [account, setAccount] = useState(null);
-  const [showCreateChannel, setShowCreateChannel] = useState(false); 
-  const [showRedeemChannel, setShowRedeemChannel] = useState(false); 
+  const [showCreateChannel, setShowCreateChannel] = useState(false);
+  const [showRedeemChannel, setShowRedeemChannel] = useState(false);
   const [createChannelData, setCreateChannelData] = useState({ channelName: '', amount: '', trustAnchor: '' });
   const [redeemChannelData, setRedeemChannelData] = useState({ redeemHex: '', redeemHexHeight: '' });
 
@@ -86,15 +86,16 @@ function App() {
   };
 
   const handleCreateChannel = async () => {
-    const { channelName, amount, trustAnchor } = createChannelData;
+    const { merchantAddress, amount, totalChannelAmount, trustAnchor } = createChannelData;
 
-    if (channelName && amount && trustAnchor) {
+    if (merchantAddress && amount && totalChannelAmount && trustAnchor) {
       try {
-        const supraProvider = account; // Assume 'account' contains the wallet provider
-        const merchantAddress = "0x123..."; // Replace with actual merchant address
-        const totalChannelAmount = 1000000; // Replace with actual total channel amount
+        // const supraProvider = account; // Assume 'account' contains the wallet provider
+        // const merchantAddress = "0x123..."; // Replace with actual merchant address
+        // const totalChannelAmount = 1000000; // Replace with actual total channel amount
 
         // Call the createChannel function
+        const supraProvider = await getProvider()
         await createChannel(supraProvider, merchantAddress, parseInt(amount), totalChannelAmount, trustAnchor);
         alert('Channel Created Successfully');
         setShowCreateChannel(false);
@@ -112,7 +113,7 @@ function App() {
     if (redeemHex && redeemHexHeight) {
       try {
         // Get the wallet provider (supraProvider from the WalletConnection component)
-        const supraProvider = account; // Assume 'account' contains the wallet provider
+        const supraProvider = await getProvider()
         await redeemChannel(supraProvider, redeemHex, parseInt(redeemHexHeight));
         alert('Channel Redeemed Successfully');
         setShowRedeemChannel(false);
@@ -220,35 +221,43 @@ function App() {
             <h2>Create Channel</h2>
             <button className="close-btn" onClick={toggleCreateChannel}>X</button>
             <form onSubmit={(e) => e.preventDefault()}>
-  <label>
-    Channel Name:
-    <input
-      type="text"
-      value={createChannelData.channelName}
-      onChange={(e) => setCreateChannelData({ ...createChannelData, channelName: e.target.value })}
-    />
-  </label>
-  
-  <label>
-    Amount:
-    <input
-      type="number"
-      value={createChannelData.amount}
-      onChange={(e) => setCreateChannelData({ ...createChannelData, amount: e.target.value })}
-    />
-  </label>
-  
-  <label>
-    Trust Anchor:
-    <input
-      type="text"
-      value={createChannelData.trustAnchor}
-      onChange={(e) => setCreateChannelData({ ...createChannelData, trustAnchor: e.target.value })}
-    />
-  </label>
-  
-  <button type="button" onClick={handleCreateChannel}>Create</button>
-</form>
+              <label>
+                Merchant Address:
+                <input
+                  type="text"
+                  value={createChannelData.merchantAddress}
+                  onChange={(e) => setCreateChannelData({ ...createChannelData, merchantAddress: e.target.value })}
+                />
+              </label>
+
+              <label>
+                Amount:
+                <input
+                  type="number"
+                  value={createChannelData.amount}
+                  onChange={(e) => setCreateChannelData({ ...createChannelData, amount: e.target.value })}
+                />
+              </label>
+
+              <label>
+                Total Channel Amount:
+                <input
+                  type="number"
+                  value={createChannelData.totalChannelAmount}
+                  onChange={(e) => setCreateChannelData({ ...createChannelData, totalChannelAmount: e.target.value })}
+                />
+              </label>
+              <label>
+                Trust Anchor:
+                <input
+                  type="text"
+                  value={createChannelData.trustAnchor}
+                  onChange={(e) => setCreateChannelData({ ...createChannelData, trustAnchor: e.target.value })}
+                />
+              </label>
+
+              <button type="button" onClick={handleCreateChannel}>Create</button>
+            </form>
 
           </div>
         </div>
@@ -261,26 +270,26 @@ function App() {
             <h2>Redeem Channel</h2>
             <button className="close-btn" onClick={toggleRedeemChannel}>X</button>
             <form onSubmit={(e) => e.preventDefault()}>
-  <label>
-    Redeem Hex:
-    <input
-      type="text"
-      value={redeemChannelData.redeemHex}
-      onChange={(e) => setRedeemChannelData({ ...redeemChannelData, redeemHex: e.target.value })}
-    />
-  </label>
-  
-  <label>
-    Redeem Hex Height:
-    <input
-      type="number"
-      value={redeemChannelData.redeemHexHeight}
-      onChange={(e) => setRedeemChannelData({ ...redeemChannelData, redeemHexHeight: e.target.value })}
-    />
-  </label>
-  
-  <button type="button" onClick={handleRedeemChannel}>Redeem</button>
-</form>
+              <label>
+                Redeem Hex:
+                <input
+                  type="text"
+                  value={redeemChannelData.redeemHex}
+                  onChange={(e) => setRedeemChannelData({ ...redeemChannelData, redeemHex: e.target.value })}
+                />
+              </label>
+
+              <label>
+                Redeem Hex Height:
+                <input
+                  type="number"
+                  value={redeemChannelData.redeemHexHeight}
+                  onChange={(e) => setRedeemChannelData({ ...redeemChannelData, redeemHexHeight: e.target.value })}
+                />
+              </label>
+
+              <button type="button" onClick={handleRedeemChannel}>Redeem</button>
+            </form>
 
           </div>
         </div>
