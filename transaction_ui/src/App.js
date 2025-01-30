@@ -23,8 +23,8 @@ function App() {
   const [account, setAccount] = useState(null);
   const [showCreateChannel, setShowCreateChannel] = useState(false);
   const [showRedeemChannel, setShowRedeemChannel] = useState(false);
-  const [createChannelData, setCreateChannelData] = useState({ channelName: '', amount: '', trustAnchor: '' });
-  const [redeemChannelData, setRedeemChannelData] = useState({ redeemHex: '', redeemHexHeight: '' });
+  const [createChannelData, setCreateChannelData] = useState({ channelName: '',totalChannelAmount:'' || '100', amount: '', trustAnchor: '' });
+  const [redeemChannelData, setRedeemChannelData] = useState({ redeemHex: ''});
 
   const sendOwl = (trips) => {
     let currentFlight = 0;
@@ -108,13 +108,13 @@ function App() {
   };
 
   const handleRedeemChannel = async () => {
-    const { redeemHex, redeemHexHeight } = redeemChannelData;
+    const { redeemHex } = redeemChannelData;
 
-    if (redeemHex && redeemHexHeight) {
+    if (redeemHex ) {
       try {
         // Get the wallet provider (supraProvider from the WalletConnection component)
         const supraProvider = await getProvider()
-        await redeemChannel(supraProvider, redeemHex, parseInt(redeemHexHeight));
+        await redeemChannel(supraProvider, redeemHex, parseInt((receivedAmount*Number(createChannelData.totalChannelAmount))/100));
         alert('Channel Redeemed Successfully');
         setShowRedeemChannel(false);
       } catch (error) {
@@ -153,7 +153,7 @@ function App() {
 
         {/* Input Section */}
         <div className="input-section">
-          <label htmlFor="coin-input">Enter amount to Send:</label>
+          <label htmlFor="coin-input">Enter % amount to Send:</label>
           <input
             id="coin-input"
             type="number"
@@ -202,7 +202,7 @@ function App() {
             <img src={letterImage} alt="Letter" className="letter-image" />
             <img src={dumbledoreImage} alt="Dumbledore" className="dumbledore-image" />
             <div className="global-progress-section">
-              <p>Amt Received: {receivedAmount}</p>
+              <p>Percentage Received: {receivedAmount}</p>
               <div className="progress-bar">
                 <div
                   className="progress-bar-fill"
@@ -231,20 +231,24 @@ function App() {
               </label>
 
               <label>
-                Amount:
-                <input
-                  type="number"
-                  value={createChannelData.amount}
-                  onChange={(e) => setCreateChannelData({ ...createChannelData, amount: e.target.value })}
-                />
-              </label>
-
-              <label>
                 Total Channel Amount:
                 <input
                   type="number"
                   value={createChannelData.totalChannelAmount}
                   onChange={(e) => setCreateChannelData({ ...createChannelData, totalChannelAmount: e.target.value })}
+                />
+              </label>
+
+              <label>
+                Amount:
+                <input
+                  type="number"
+                  value={createChannelData.amount}
+                  onChange={(e) => {
+                    const newValue = Number(e.target.value);
+                    setCreateChannelData({ ...createChannelData, amount: newValue });
+                    // setCoins(newValue * 10); // Update coins automatically
+                  }}
                 />
               </label>
               <label>
@@ -256,7 +260,7 @@ function App() {
                 />
               </label>
 
-              <button type="button" onClick={handleCreateChannel}>Create</button>
+              <button type="button" onClick={() => { handleCreateChannel(); toggleCreateChannel() }}>Create</button>
             </form>
 
           </div>
@@ -275,20 +279,11 @@ function App() {
                 <input
                   type="text"
                   value={redeemChannelData.redeemHex}
-                  onChange={(e) => setRedeemChannelData({ ...redeemChannelData, redeemHex: e.target.value })}
+                  onChange={(e) => setRedeemChannelData({ ...redeemChannelData, redeemHex: e.target.value})}
                 />
               </label>
-
-              <label>
-                Redeem Hex Height:
-                <input
-                  type="number"
-                  value={redeemChannelData.redeemHexHeight}
-                  onChange={(e) => setRedeemChannelData({ ...redeemChannelData, redeemHexHeight: e.target.value })}
-                />
-              </label>
-
-              <button type="button" onClick={handleRedeemChannel}>Redeem</button>
+              <label>You can redeem {(receivedAmount*Number(createChannelData.totalChannelAmount))/100}</label>
+              <button type="button" onClick={() => { handleRedeemChannel(); toggleRedeemChannel() }}>Redeem</button>
             </form>
 
           </div>
