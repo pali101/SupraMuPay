@@ -149,7 +149,7 @@ module self::micropayment_v2{
         };
 
         // Validate the hash against the trust anchor
-        if(hash_value != trust_anchor_vec){
+        if(hash_value == trust_anchor_vec){
             // Calculate receiver and sender amounts
             let receiver_amount = (no_of_tokens * initial_amount)/total_tokens; 
             let sender_amount = initial_amount - receiver_amount;
