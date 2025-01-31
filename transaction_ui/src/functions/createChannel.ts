@@ -32,7 +32,8 @@ export async function createChannel(supraProvider: any,merchantAddress: string,a
     const rawTxPayload = [
       accounts[0],
       sequenceNumber.toString(),
-      "0x4af78119e05ddb18513db574d3a76e820d5e1d2e8a6b65105bf96216f095e1c9",
+      // "0x4af78119e05ddb18513db574d3a76e820d5e1d2e8a6b65105bf96216f095e1c9",
+      "0xd30a28a83051962b5d5de22fabb2fc8113012eb13d5462994490cc1b19ce5472",
       "micropayment_v2",
       "create_channel",
       [],
