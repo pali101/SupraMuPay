@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import Sparkle from 'react-sparkle';
-import WalletConnection from './components/walletConnect.tsx';
-import { redeemChannel } from './functions/redeemChannel.ts';  // import redeemChannel function
-import { createChannel } from './functions/createChannel.ts';  // import createChannel function
-import { getProvider } from './components/walletConnect.tsx';
-import './App.css';
-import './animations.css';
-import harryImage from './assets/harry.gif';
-import owlImage from './assets/owl_flying.gif';
-import letterImage from './assets/letter.png';
-import dumbledoreImage from './assets/dumbledore.png';
+import React, { useState } from "react";
+import Sparkle from "react-sparkle";
+import WalletConnection from "./components/walletConnect.tsx";
+import { redeemChannel } from "./functions/redeemChannel.ts"; // import redeemChannel function
+import { createChannel } from "./functions/createChannel.ts"; // import createChannel function
+import { getProvider } from "./components/walletConnect.tsx";
+import "./App.css";
+import "./animations.css";
+import harryImage from "./assets/harry.gif";
+import owlImage from "./assets/owl_flying.gif";
+import letterImage from "./assets/letter.png";
+import dumbledoreImage from "./assets/dumbledore.png";
 
 let N = 100;
 
@@ -23,8 +23,13 @@ function App() {
   const [account, setAccount] = useState(null);
   const [showCreateChannel, setShowCreateChannel] = useState(false);
   const [showRedeemChannel, setShowRedeemChannel] = useState(false);
-  const [createChannelData, setCreateChannelData] = useState({ channelName: '',totalChannelAmount:'' || '100', amount: '', trustAnchor: '' });
-  const [redeemChannelData, setRedeemChannelData] = useState({ redeemHex: ''});
+  const [createChannelData, setCreateChannelData] = useState({
+    channelName: "",
+    totalChannelAmount: "" || "100",
+    amount: "",
+    trustAnchor: "",
+  });
+  const [redeemChannelData, setRedeemChannelData] = useState({ redeemHex: "" });
 
   const sendOwl = (trips) => {
     let currentFlight = 0;
@@ -64,7 +69,8 @@ function App() {
   };
 
   const handleSendCoins = () => {
-    if (coins <= 0 || deliveryInProgress || coins > 100 - receivedAmount) return;
+    if (coins <= 0 || deliveryInProgress || coins > 100 - receivedAmount)
+      return;
 
     const trips = Math.floor(coins / 10);
 
@@ -86,7 +92,8 @@ function App() {
   };
 
   const handleCreateChannel = async () => {
-    const { merchantAddress, amount, totalChannelAmount, trustAnchor } = createChannelData;
+    const { merchantAddress, amount, totalChannelAmount, trustAnchor } =
+      createChannelData;
 
     if (merchantAddress && amount && totalChannelAmount && trustAnchor) {
       try {
@@ -95,33 +102,48 @@ function App() {
         // const totalChannelAmount = 1000000; // Replace with actual total channel amount
 
         // Call the createChannel function
-        const supraProvider = await getProvider()
-        await createChannel(supraProvider, merchantAddress, parseInt(amount), totalChannelAmount, trustAnchor);
-        alert('Channel Created Successfully');
+        const supraProvider = await getProvider();
+        await createChannel(
+          supraProvider,
+          merchantAddress,
+          parseInt(amount),
+          totalChannelAmount,
+          trustAnchor
+        );
+        alert("Channel Created Successfully");
         setShowCreateChannel(false);
       } catch (error) {
-        console.error('Create Channel failed:', error);
+        console.error("Create Channel failed:", error);
       }
     } else {
-      alert('Please enter valid channel details.');
+      alert("Please enter valid channel details.");
     }
   };
 
   const handleRedeemChannel = async () => {
     const { redeemHex } = redeemChannelData;
 
-    if (redeemHex ) {
+    if (redeemHex) {
       try {
         // Get the wallet provider (supraProvider from the WalletConnection component)
-        const supraProvider = await getProvider()
-        await redeemChannel(supraProvider, redeemHex, parseInt((receivedAmount*Number(createChannelData.totalChannelAmount))/100));
-        alert('Channel Redeemed Successfully');
+        const supraProvider = await getProvider();
+        await redeemChannel(
+          supraProvider,
+          redeemHex,
+          parseInt(
+            (receivedAmount * Number(createChannelData.totalChannelAmount)) /
+              100
+          )
+        );
+        setCoins(0);
+        setreceivedAmount(0);
+        alert("Channel Redeemed Successfully");
         setShowRedeemChannel(false);
       } catch (error) {
-        console.error('Redeem Channel failed:', error);
+        console.error("Redeem Channel failed:", error);
       }
     } else {
-      alert('Please enter valid redeem details.');
+      alert("Please enter valid redeem details.");
     }
   };
 
@@ -130,7 +152,7 @@ function App() {
       <header className="App-Body">
         <nav className="navbar">
           <Sparkle
-            color={'#FFF'}
+            color={"#FFF"}
             count={250}
             minSize={2}
             maxSize={6}
@@ -138,7 +160,7 @@ function App() {
             fadeOutSpeed={70}
             newSparkleOnFadeOut={true}
             flicker={true}
-            flickerSpeed={'slower'}
+            flickerSpeed={"slower"}
           />
           <div className="wallet-section">
             <WalletConnection account={account} setAccount={setAccount} />
@@ -164,9 +186,11 @@ function App() {
           <button
             className="send-button"
             onClick={handleSendCoins}
-            disabled={deliveryInProgress || coins <= 0 || coins > 100 - receivedAmount}
+            disabled={
+              deliveryInProgress || coins <= 0 || coins > 100 - receivedAmount
+            }
           >
-            {deliveryInProgress ? 'Delivery in Progress...' : 'Send'}
+            {deliveryInProgress ? "Delivery in Progress..." : "Send"}
           </button>
         </div>
 
@@ -175,7 +199,10 @@ function App() {
           <div className="progress-section">
             <p>{tripProgress.toFixed(0)}%</p>
             <div className="progress-bar">
-              <div className="progress-bar-fill" style={{ width: `${tripProgress}%` }}></div>
+              <div
+                className="progress-bar-fill"
+                style={{ width: `${tripProgress}%` }}
+              ></div>
             </div>
           </div>
         )}
@@ -191,16 +218,20 @@ function App() {
           <img
             src={owlImage}
             alt="Owl"
-            className={`owl-image ${flightCount > 0 ? 'owl-flying' : ''}`}
+            className={`owl-image ${flightCount > 0 ? "owl-flying" : ""}`}
             style={{
-              animationDuration: '2s',
+              animationDuration: "2s",
               animationDelay: `${(flightCount - 1) * 2}s`,
-              animationPlayState: 'running',
+              animationPlayState: "running",
             }}
           />
           <div className="dumbledore">
             <img src={letterImage} alt="Letter" className="letter-image" />
-            <img src={dumbledoreImage} alt="Dumbledore" className="dumbledore-image" />
+            <img
+              src={dumbledoreImage}
+              alt="Dumbledore"
+              className="dumbledore-image"
+            />
             <div className="global-progress-section">
               <p>Percentage Received: {receivedAmount}</p>
               <div className="progress-bar">
@@ -219,14 +250,21 @@ function App() {
         <div className="form-popup">
           <div className="form-content">
             <h2>Create Channel</h2>
-            <button className="close-btn" onClick={toggleCreateChannel}>X</button>
+            <button className="close-btn" onClick={toggleCreateChannel}>
+              X
+            </button>
             <form onSubmit={(e) => e.preventDefault()}>
               <label>
                 Merchant Address:
                 <input
                   type="text"
                   value={createChannelData.merchantAddress}
-                  onChange={(e) => setCreateChannelData({ ...createChannelData, merchantAddress: e.target.value })}
+                  onChange={(e) =>
+                    setCreateChannelData({
+                      ...createChannelData,
+                      merchantAddress: e.target.value,
+                    })
+                  }
                 />
               </label>
 
@@ -235,7 +273,12 @@ function App() {
                 <input
                   type="number"
                   value={createChannelData.totalChannelAmount}
-                  onChange={(e) => setCreateChannelData({ ...createChannelData, totalChannelAmount: e.target.value })}
+                  onChange={(e) =>
+                    setCreateChannelData({
+                      ...createChannelData,
+                      totalChannelAmount: e.target.value,
+                    })
+                  }
                 />
               </label>
 
@@ -246,7 +289,10 @@ function App() {
                   value={createChannelData.amount}
                   onChange={(e) => {
                     const newValue = Number(e.target.value);
-                    setCreateChannelData({ ...createChannelData, amount: newValue });
+                    setCreateChannelData({
+                      ...createChannelData,
+                      amount: newValue,
+                    });
                     // setCoins(newValue * 10); // Update coins automatically
                   }}
                 />
@@ -256,13 +302,25 @@ function App() {
                 <input
                   type="text"
                   value={createChannelData.trustAnchor}
-                  onChange={(e) => setCreateChannelData({ ...createChannelData, trustAnchor: e.target.value })}
+                  onChange={(e) =>
+                    setCreateChannelData({
+                      ...createChannelData,
+                      trustAnchor: e.target.value,
+                    })
+                  }
                 />
               </label>
 
-              <button type="button" onClick={() => { handleCreateChannel(); toggleCreateChannel() }}>Create</button>
+              <button
+                type="button"
+                onClick={() => {
+                  handleCreateChannel();
+                  toggleCreateChannel();
+                }}
+              >
+                Create
+              </button>
             </form>
-
           </div>
         </div>
       )}
@@ -272,20 +330,39 @@ function App() {
         <div className="form-popup">
           <div className="form-content">
             <h2>Redeem Channel</h2>
-            <button className="close-btn" onClick={toggleRedeemChannel}>X</button>
+            <button className="close-btn" onClick={toggleRedeemChannel}>
+              X
+            </button>
             <form onSubmit={(e) => e.preventDefault()}>
               <label>
                 Redeem Hex:
                 <input
                   type="text"
                   value={redeemChannelData.redeemHex}
-                  onChange={(e) => setRedeemChannelData({ ...redeemChannelData, redeemHex: e.target.value})}
+                  onChange={(e) =>
+                    setRedeemChannelData({
+                      ...redeemChannelData,
+                      redeemHex: e.target.value,
+                    })
+                  }
                 />
               </label>
-              <label>You can redeem {(receivedAmount*Number(createChannelData.totalChannelAmount))/100}</label>
-              <button type="button" onClick={() => { handleRedeemChannel(); toggleRedeemChannel() }}>Redeem</button>
+              <label>
+                You can redeem{" "}
+                {(receivedAmount *
+                  Number(createChannelData.totalChannelAmount)) /
+                  100}
+              </label>
+              <button
+                type="button"
+                onClick={() => {
+                  handleRedeemChannel();
+                  toggleRedeemChannel();
+                }}
+              >
+                Redeem
+              </button>
             </form>
-
           </div>
         </div>
       )}
