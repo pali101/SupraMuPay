@@ -33,7 +33,7 @@ export async function createChannel(supraProvider: any,merchantAddress: string,a
       accounts[0],
       sequenceNumber.toString(),
       // "0x4af78119e05ddb18513db574d3a76e820d5e1d2e8a6b65105bf96216f095e1c9",
-      "0xd30a28a83051962b5d5de22fabb2fc8113012eb13d5462994490cc1b19ce5472",
+      "0x47fdaf61c8ece1e2c788f9d0e192ae0832be69b4677b92020097548386f493ab",
       "micropayment_v2",
       "create_channel",
       [],

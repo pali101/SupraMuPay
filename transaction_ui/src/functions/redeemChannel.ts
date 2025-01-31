@@ -30,7 +30,7 @@ export async function redeemChannel(supraProvider: any,redeemHex: string,redeemH
     const client = await getClient();
     const sequenceNumber = (await client.getAccountInfo(accounts[0])).sequence_number;
     const functionInfo = '::micropayment_v2::get_last_channel_id';
-    const moduleAddress = "0xd30a28a83051962b5d5de22fabb2fc8113012eb13d5462994490cc1b19ce5472";
+    const moduleAddress = "0x47fdaf61c8ece1e2c788f9d0e192ae0832be69b4677b92020097548386f493ab";
     const channelId =await client.invokeViewMethod(moduleAddress+functionInfo,[],[]);
     console.log("channelId",channelId);
     const rawTxPayload = [
